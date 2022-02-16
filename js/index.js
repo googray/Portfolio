@@ -288,3 +288,120 @@ function lighterLangSwitcher() {
   }
 }
 lighterLangSwitcher();
+
+const video = document.querySelector(".video");
+const playIco = document.querySelector(".play-icon");
+const volumeIco = document.querySelector(".volume-icon");
+const playBtn = document.querySelector(".play-button__big");
+const volume = document.querySelector(".volume");
+const volumeValue = document.querySelector(".volume-value");
+const progress = document.querySelector(".progress");
+const fullScreen = document.querySelector(".fullscreen-icon");
+const videoPlayer = document.querySelector(".player-container");
+const background = document.querySelector(".background");
+const speed = document.querySelector(".speed");
+const speedValue = document.querySelector(".speed-value");
+const speedIco = document.querySelector(".speed-icon");
+const skipIcos = document.querySelectorAll("[data-skip");
+const controls = document.querySelector(".controls");
+
+function togglePlay() {
+  const method = video.paused ? "play" : "pause";
+  video[method]();
+  if (background.style.zIndex != "0") {
+    background.style.opacity = "0";
+    background.style.zIndex = "0";
+  }
+}
+
+console.log(this);
+function changeIcon() {
+  const icon = this.paused ? "play" : "pause";
+  playIco.style.backgroundImage = `url(./assets/svg/${icon}.svg)`;
+  playBtn.classList.toggle("none");
+}
+
+function skip() {
+  video.currentTime += parseFloat(this.dataset.skip);
+}
+
+function updateVolume() {
+  video["volume"] = volume.value;
+  // console.log(video["volume"]);
+  volume.style.background = `linear-gradient(to right, #bdae82 0%, #bdae82 ${
+    volume.value * 100
+  }%, rgba(0, 0, 0, 0.5) ${volume.value * 100}%, rgba(0, 0, 0, 0.5) 100%)`;
+  volume.value == 0
+    ? (volumeIco.style.backgroundImage = `url(./assets/svg/speaker-simple-x.svg)`)
+    : (volumeIco.style.backgroundImage = `url(./assets/svg/speaker-simple-high.svg)`);
+  volumeValue.textContent = `${Math.round(volume.value * 100)}%`;
+}
+
+function muteVolume() {
+  if (volume.value == 0) {
+    volume.value = 0.5;
+    updateVolume();
+  } else {
+    volume.value = 0;
+    updateVolume();
+  }
+}
+
+function updateProgress() {
+  const time = (video.currentTime / video.duration) * 100;
+  progress.value = `${time}`;
+  progress.style.background = `linear-gradient(to right, #bdae82 0%, #bdae82 ${time}%, rgba(0, 0, 0, 0.5) ${time}%, rgba(0, 0, 0, 0.5) 100%)`;
+}
+
+function scrub(e) {
+  const scrubTime = (e.offsetX / progress.offsetWidth) * video.duration;
+
+  video.currentTime = scrubTime;
+}
+
+function speedChange() {
+  video["playbackRate"] = speed.value;
+  speed.style.background = `linear-gradient(to right, #bdae82 0%, #bdae82 ${
+    speed.value * 100 - 50
+  }%, rgba(0, 0, 0, 0.5) ${speed.value * 100 - 50}%, rgba(0, 0, 0, 0.5) 100%)`;
+  speedValue.textContent = `${speed.value}x`;
+}
+
+function normalizeSpeed() {
+  speed.value = 1.0;
+  speedChange();
+}
+
+function toggleFullScreen() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    videoPlayer.requestFullscreen();
+  }
+}
+
+let mousedown = false;
+
+video.addEventListener("click", togglePlay);
+video.addEventListener("play", changeIcon);
+video.addEventListener("pause", changeIcon);
+video.addEventListener("timeupdate", updateProgress);
+playIco.addEventListener("click", togglePlay);
+background.addEventListener("click", togglePlay);
+playBtn.addEventListener("click", togglePlay);
+volumeIco.addEventListener("click", muteVolume);
+volume.addEventListener("change", updateVolume);
+volume.addEventListener("mousemove", updateVolume);
+progress.addEventListener("click", scrub);
+progress.addEventListener("mousemove", (e) => mousedown && scrub(e));
+progress.addEventListener("mousedown", () => {
+  mousedown = true;
+});
+progress.addEventListener("mouseup", () => {
+  mousedown = false;
+});
+speed.addEventListener("change", speedChange);
+speed.addEventListener("mousemove", speedChange);
+speedIco.addEventListener("click", normalizeSpeed);
+fullScreen.addEventListener("click", toggleFullScreen);
+skipIcos.forEach((icon) => icon.addEventListener("click", skip));

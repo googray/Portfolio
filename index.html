@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/fonts.css" />
     <link rel="icon" href="./assets/svg/logo_hover.ico" type="image/x-icon" />
+    <script
+      src="https://kit.fontawesome.com/e368db4807.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Portfolio</title>
   </head>
   <body class="body">
@@ -234,7 +238,7 @@
             </div>
           </div>
         </section>
-        <section class="video" id="video">
+        <section class="video-section" id="video">
           <div class="wrapper">
             <div class="video-wrapper">
               <div class="line-left vid"></div>
@@ -243,13 +247,53 @@
               </div>
               <div class="line-right vid"></div>
             </div>
-            <div class="video-player">
-              <!--will be add-->
-              <!-- <video class="video-player viewer" src="#"> -->
-              <div class="player-body">
-                <button type="button" class="play-button__big"></button>
+            <div class="container-video player-container">
+              <div class="video-player">
+                <div class="background"></div>
+                <video
+                  class="video"
+                  id="viewer"
+                  src="./assets/video/video.mp4"
+                ></video>
+                <img
+                  src="./assets/svg/big-play.svg"
+                  alt="play"
+                  class="play-button__big"
+                />
               </div>
-              <!-- </video> -->
+              <div class="controls">
+                <div class="progress"></div>
+                <div class="buttons-container">
+                  <div class="backward-icon icon" data-skip="-10"></div>
+                  <div class="play-icon icon"></div>
+                  <div class="forward-icon icon" data-skip="+10"></div>
+                </div>
+                <div class="ranges-container">
+                  <div class="volume-icon icon"></div>
+                  <input
+                    type="range"
+                    name="volume"
+                    value="0.5"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    class="volume range"
+                  />
+                  <div class="volume-value">50%</div>
+                  <div class="speed-icon icon"></div>
+                  <input
+                    type="range"
+                    name="speed"
+                    value="1.0"
+                    min="0.5"
+                    max="1.5"
+                    step="0.1"
+                    class="speed range"
+                  />
+                  <div class="speed-value">1.0x</div>
+                  <div class="fullscreen-icon icon"></div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
