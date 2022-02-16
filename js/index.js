@@ -304,6 +304,8 @@ const speedValue = document.querySelector(".speed-value");
 const speedIco = document.querySelector(".speed-icon");
 const skipIcos = document.querySelectorAll("[data-skip");
 const controls = document.querySelector(".controls");
+const timeCounter = document.querySelector(".time");
+let timeTotal = 0;
 
 function togglePlay() {
   const method = video.paused ? "play" : "pause";
@@ -314,8 +316,8 @@ function togglePlay() {
   }
 }
 
-console.log(this);
 function changeIcon() {
+  console.log(this.paused);
   const icon = this.paused ? "play" : "pause";
   playIco.style.backgroundImage = `url(./assets/svg/${icon}.svg)`;
   playBtn.classList.toggle("none");
@@ -327,7 +329,6 @@ function skip() {
 
 function updateVolume() {
   video["volume"] = volume.value;
-  // console.log(video["volume"]);
   volume.style.background = `linear-gradient(to right, #bdae82 0%, #bdae82 ${
     volume.value * 100
   }%, rgba(0, 0, 0, 0.5) ${volume.value * 100}%, rgba(0, 0, 0, 0.5) 100%)`;
@@ -382,6 +383,26 @@ function toggleFullScreen() {
 
 let mousedown = false;
 
+function updateCurrentTime() {
+  let seconds = Math.floor(video.currentTime % 60);
+  let minutes = Math.floor(video.currentTime / 60);
+  seconds = seconds >= 10 ? seconds : "0" + seconds;
+  timeCounter.innerText = `${minutes}:${seconds} / ${timeTotal}`;
+  if (mousedown) return;
+}
+
+function setVideoData() {
+  if (video.readyState) {
+    let seconds = Math.floor(video.duration % 60);
+    let minutes = Math.floor(video.duration / 60);
+    seconds = seconds >= 10 ? seconds : "0" + seconds;
+    timeTotal = `${minutes}:${seconds}`;
+    timeCounter.innerText = `0:00 / ${timeTotal}`;
+    updateCurrentTime();
+  }
+}
+setVideoData();
+
 video.addEventListener("click", togglePlay);
 video.addEventListener("play", changeIcon);
 video.addEventListener("pause", changeIcon);
@@ -405,3 +426,5 @@ speed.addEventListener("mousemove", speedChange);
 speedIco.addEventListener("click", normalizeSpeed);
 fullScreen.addEventListener("click", toggleFullScreen);
 skipIcos.forEach((icon) => icon.addEventListener("click", skip));
+video.addEventListener("timeupdate", updateCurrentTime);
+video.addEventListener("loadedmetadata", setVideoData);
